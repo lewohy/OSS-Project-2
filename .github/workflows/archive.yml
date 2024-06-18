@@ -39,6 +39,10 @@ jobs:
         run: |
           jupyter nbconvert --to script project.ipynb
 
+      - name: Rename Python script
+        run: |
+          mv project.txt project.py
+
       - name: Remove all files
         run: |
           git rm -r --cached .
