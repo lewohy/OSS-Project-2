@@ -1,0 +1,58 @@
+name: archive
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  archive:
+    name: archive files
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Git
+        run: |
+          git config --global user.email "lwh8762@gmail.com"
+          git config --global user.name "lewohy"
+
+      - name: Checkout to archive
+        run: |
+          git checkout -b archive
+          
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.8'
+
+      - name: Install nbconvert
+        run: |
+          python -m pip install --upgrade pip
+          pip install nbconvert
+
+      - name: Convert Jupyter Notebook to Python script
+        run: |
+          jupyter nbconvert --to script project.ipynb --output 12226322_이우현.py
+
+      - name: Remove all files
+        run: |
+          git rm -r --cached .
+        
+      - name: Create .txt file
+        run: echo "${{ github.server_url }}/${{ github.repository }}" > ./github.txt
+
+      - name: Add files
+        run: |
+          git add *.py *.txt
+          git commit -m "Update archive branch with selected files"
+
+      - name: Push changes
+        run: |
+          git push origin archive --force
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
