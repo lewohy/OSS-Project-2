@@ -37,7 +37,7 @@ jobs:
 
       - name: Convert Jupyter Notebook to Python script
         run: |
-          jupyter nbconvert --to script project.ipynb --output 12226322_이우현.py
+          jupyter nbconvert --to script project.ipynb
 
       - name: Remove all files
         run: |
